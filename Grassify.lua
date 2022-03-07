@@ -5,26 +5,6 @@ current layer or selection
 By Thoof (@Thoof4 on twitter)
 -------------------------------------------------------------------------------]]--
 
-local function get_selection_image() 
-	local selection = app.activeSprite.selection
-	local offset = selection.bounds
-	
-	local curr_image = app.activeCel.image
-	local image_offset = app.activeCel.bounds
-	
-	local image_selection_offset = Point(offset.x - image_offset.x, offset.y - image_offset.y)
-	
-	for it in curr_image:pixels() do
-		local point = Point(it.x + image_selection_offset.x, it.y + image_selection_offset.y)
-		if selection.contains(point.x, point.y) then 
-			new_image.drawPixel(point.x, point.y)
-		end
-	end
-
-
-	return app.activeCel.image -- For now just do the cell image
-end 
-
 local dlg = Dialog { title = "Grassify options" }
 
 local function grassify(image)
