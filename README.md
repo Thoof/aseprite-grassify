@@ -7,9 +7,9 @@ A small aseprite script that converts the current layer/selection to a grasslike
 HOW TO USE
 
     In aseprite, go File->Scripts->Open scripts folder
-    Download the zip file. Put CustomBrushOptions.lua into the scripts folder.
+    Download the zip file. Put Grassify.lua into the scripts folder.
     File->Scripts->Rescan scripts folder
-    File->Scripts->CustomBrushOptions
+    File->Scripts->Grassify
     Should be good to go! 
     
 Grass coverage: The amount of grass that appears along the edge of a pixel cluster
