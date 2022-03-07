@@ -13,7 +13,10 @@ HOW TO USE
     Should be good to go! 
     
 Grass coverage: The amount of grass that appears along the edge of a pixel cluster
+
 Grass length: Length of the grass in pixels
+
 Randomize length: Select this to pick random grass length between 1 and the length specified in the grass length slider
+
 
 
