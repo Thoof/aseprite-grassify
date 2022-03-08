@@ -2,7 +2,7 @@
 
 ![ezgif com-gif-maker(2)](https://user-images.githubusercontent.com/5313706/157093185-1cee4a14-3bd0-43ba-9c2e-281d86fc1251.gif)
 
-A small aseprite script that converts the current layer/selection to a grasslike texture. Mostly works on single, isolated colors.
+A small aseprite script that converts the current layer/selection to a grasslike texture.
 
 HOW TO USE
 
