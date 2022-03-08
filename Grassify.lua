@@ -8,7 +8,8 @@ By Thoof (@Thoof4 on twitter)
 local dlg = Dialog { title = "Grassify options" }
 
 local function grassify(image)
-	local new_image = Image(app.activeSprite.width, app.activeSprite.height)
+	local new_image = Image(app.activeSprite.width, app.activeSprite.height, image.colorMode)
+
 
 	local selection = app.activeSprite.selection
 	local offset = selection.bounds
@@ -16,8 +17,9 @@ local function grassify(image)
 	local image_offset = app.activeCel.bounds
 	
 	local image_selection_offset = Point(offset.x - image_offset.x, offset.y - image_offset.y)
-
+	
 	new_image:drawImage(image, Point(app.activeCel.bounds.x, app.activeCel.bounds.y))
+	
 	
 	
 	local max_grass_length = dlg.data.grass_length
@@ -26,23 +28,31 @@ local function grassify(image)
 	
 	local y_offset = 1
 	
-	for x = 0, new_image.width, 2 do 
+	for x = 0, new_image.width - 1, 2 do 
 		
 		for y = 0, new_image.height - 1, y_offset do
+			local invalid_pixel = (y - y_offset) >= new_image.height or (y - y_offset) < 0
 		
-			if selection.isEmpty or selection:contains(Point(x, y)) then 
+			if (selection.isEmpty or selection:contains(Point(x, y))) and invalid_pixel == false then 
 				local pixel = new_image:getPixel(x, y)
 				local next_pixel = new_image:getPixel(x, y - y_offset)
-			
+				
 				local rand_coverage = math.random(0, 100)
 				
 				local length = max_grass_length
 				if randomize_grass then 
 					length = math.random(1, max_grass_length)
 				end 
+
+				local pixel_is_transparent = (app.pixelColor.rgbaA(pixel) == 0)
+				if image.colorMode == ColorMode.INDEXED then
+					pixel_is_transparent = (pixel == app.activeSprite.spec.transparentColor)
+				elseif image.colorMode == ColorMode.GRAY then 
+					pixel_is_transparent = (app.pixelColor.grayaV(pixel) == 0)
+				end
 				
 				-- If we've found a spot where different colors occur
-				if rand_coverage < grass_coverage and app.pixelColor.rgbaA(pixel) ~= 0 and pixel ~= next_pixel then 
+				if rand_coverage < grass_coverage and pixel_is_transparent == false and pixel ~= next_pixel then 
 					
 					local y_value = y - y_offset
 					local left_pixel = new_image:getPixel(x - 1, y_value)
@@ -73,10 +83,12 @@ local function grassify(image)
 	for x = 1, new_image.width, 2 do 
 		
 		for y = new_image.height - 1, 0, y_offset do
-			if selection.isEmpty or selection:contains(Point(x, y)) then 
+			local invalid_pixel = (y - y_offset) >= new_image.height or (y - y_offset) < 0
+				
+			if (selection.isEmpty or selection:contains(Point(x, y))) and invalid_pixel == false then 
 				local pixel = new_image:getPixel(x, y)
 				local next_pixel = new_image:getPixel(x, y - y_offset)
-			
+				
 				local rand_coverage = math.random(0, 100)
 				
 				local length = max_grass_length
@@ -84,8 +96,25 @@ local function grassify(image)
 					length = math.random(1, max_grass_length)
 				end 
 				
-				-- If we've found a spot where different colors occur
-				if rand_coverage < grass_coverage and app.pixelColor.rgbaA(pixel) ~= 0 and pixel ~= next_pixel then 
+				local pixel_is_transparent = app.pixelColor.rgbaA(pixel) == 0
+				if image.colorMode == ColorMode.INDEXED then
+					pixel_is_transparent = (pixel == app.activeSprite.spec.transparentColor)
+				elseif image.colorMode == ColorMode.GRAY then 
+					pixel_is_transparent = (app.pixelColor.grayaV(pixel) == 0)
+				end
+				
+				local next_pixel_is_transparent = (app.pixelColor.rgbaA(next_pixel) == 0)
+				if image.colorMode == ColorMode.INDEXED then
+					next_pixel_is_transparent = (next_pixel == app.activeSprite.spec.transparentColor)
+				elseif image.colorMode == ColorMode.GRAY then 
+					next_pixel_is_transparent = (app.pixelColor.grayaV(next_pixel) == 0)
+				end
+				
+
+				
+				-- If we've found a spot where different colors occur. For this second loop we only need to do it when the next
+				-- pixel is transparent
+				if rand_coverage < grass_coverage and pixel_is_transparent == false and pixel ~= next_pixel and next_pixel_is_transparent == true then 
 					local y_value = y - y_offset
 					local left_pixel = new_image:getPixel(x - 1, y_value)
 					local right_pixel = new_image:getPixel(x + 1, y_value)
