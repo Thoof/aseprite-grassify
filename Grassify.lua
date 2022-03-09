@@ -48,7 +48,7 @@ local function grassify(image)
 				if image.colorMode == ColorMode.INDEXED then
 					pixel_is_transparent = (pixel == app.activeSprite.spec.transparentColor)
 				elseif image.colorMode == ColorMode.GRAY then 
-					pixel_is_transparent = (app.pixelColor.grayaV(pixel) == 0)
+					pixel_is_transparent = (app.pixelColor.grayaA(pixel) == 0)
 				end
 				
 				-- If we've found a spot where different colors occur
@@ -107,7 +107,7 @@ local function grassify(image)
 				if image.colorMode == ColorMode.INDEXED then
 					next_pixel_is_transparent = (next_pixel == app.activeSprite.spec.transparentColor)
 				elseif image.colorMode == ColorMode.GRAY then 
-					next_pixel_is_transparent = (app.pixelColor.grayaV(next_pixel) == 0)
+					next_pixel_is_transparent = (app.pixelColor.grayaA(next_pixel) == 0)
 				end
 				
 
